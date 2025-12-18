@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 //...existing code...
-
-
-
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,13 +19,16 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
           {children}
         </ThemeProvider>
+        <Link href={"/create"} className="fixed bottom-20 right-20">
+          <Button className="text-3xl p-2 text-center">+</Button>
+        </Link>
       </body>
     </html>
   );
