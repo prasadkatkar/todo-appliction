@@ -1,5 +1,5 @@
+import { TodoAction } from "@/components/todoAction";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getTodoById } from "@/lib/clients/api";
-import { ArrowLeft, CheckCheckIcon } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default async function SingleTodoPage({
@@ -38,15 +38,7 @@ export default async function SingleTodoPage({
         </CardContent>
         <hr />
         <CardFooter>
-          <div className="w-full flex items-center justify-end gap-4">
-            <Button variant={"destructive"}>Delete</Button>
-            {!todo?.completed ? (
-              <Button>
-                <CheckCheckIcon />
-                Mark Completed
-              </Button>
-            ) : null}
-          </div>
+          <TodoAction id={id} completed={todo?.completed || false} />
         </CardFooter>
       </Card>
     </div>
