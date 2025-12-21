@@ -19,3 +19,20 @@ export const todosTable = sqliteTable("todos",{
         })
     
 })
+
+export const users = sqliteTable('users',{
+    id:integer({
+        mode:"number",
+    }).primaryKey({
+        autoIncrement:true
+    }),
+    email:text().notNull().unique(),
+    password:text().notNull(),
+    created_at:integer({
+        mode:"timestamp"
+    }),
+    updated_at:integer({
+        mode:"timestamp"
+    })
+    
+})
