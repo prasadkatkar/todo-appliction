@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -27,20 +27,32 @@ export function TodoFrom() {
   const [loading, SetLoading] = useState(false);
   const router = useRouter();
 
-  const disabled = useMemo(() => {
-    if (title.trim().length === 0 || description.trim().length === 0) {
-      return true;
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      router.push("/login");
+      return;
     }
-    return false;
-  }, [title, description]);
+  }, []);
+
+  const disabled = title.trim().length === 0 || description.trim().length === 0;
 
   async function handleSubmit() {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      alert("login is expired, Please login again");
+      router.push("/login");
+      return;
+    }
     // console.log(title);
     // console.log(desc);
     SetLoading(true);
     const response = await fetch("/api/todos", {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({ title, description }),
     });
 
@@ -49,6 +61,8 @@ export function TodoFrom() {
 
     if (!response.ok) {
       toast.error("failed to craete todo");
+      router.push("/login");
+      return;
     }
     const data = await response.json();
 

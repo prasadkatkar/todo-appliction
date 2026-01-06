@@ -8,16 +8,29 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getTodoById } from "@/lib/clients/api";
+import { validateJwt } from "@/lib/server-utils";
 import { ArrowLeft } from "lucide-react";
+import { cookies } from "next/headers";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function SingleTodoPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const appCookies = await cookies();
+  const token = appCookies.get("jwt");
+  if (!token?.value) {
+    redirect("./login");
+  }
+  const decodedValue = validateJwt(token.value);
+  if (!decodedValue) {
+    redirect("./login");
+  }
   const { id } = await params;
   const todo = await getTodoById(id);
+
   return (
     <div className="p-12">
       <Card>

@@ -26,6 +26,7 @@ export const users = sqliteTable('users',{
     }).primaryKey({
         autoIncrement:true
     }),
+    name:text(),
     email:text().notNull().unique(),
     password:text().notNull(),
     created_at:integer({

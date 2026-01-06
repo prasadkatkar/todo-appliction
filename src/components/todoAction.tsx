@@ -13,13 +13,26 @@ export function TodoAction({ id, completed }: TodoActionsProps) {
   const router = useRouter();
 
   async function handleDelete() {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      alert("login is expired, please login again.");
+      router.push("/login");
+      return;
+    }
+
     try {
-      const response = await fetch(`/api/todos/${id}`, { method: "DELETE" });
+      const response = await fetch(`/api/todos/${id}`, {
+        method: "DELETE",
+        headers: { authorization: `Bearer ${token}` },
+      });
       if (response.ok) {
         toast.success("Todo Deleted Successfully");
         router.push("/");
       } else {
         toast.error("Failed to Delete Todo");
+        if (response.status === 400) {
+          router.push("/login");
+        }
       }
     } catch {
       toast.error("Error Deleting Todo");
@@ -27,10 +40,19 @@ export function TodoAction({ id, completed }: TodoActionsProps) {
   }
 
   async function handleMarkComplete() {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
     try {
       const response = await fetch(`/api/todos/${id}`, {
         method: "PUT",
-        headers: { "content-type": "applcation/json" },
+        headers: {
+          "content-type": "applcation/json",
+          authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ completed: true }),
       });
       if (response.ok) {
@@ -38,6 +60,9 @@ export function TodoAction({ id, completed }: TodoActionsProps) {
         router.refresh();
       } else {
         toast.error("Failed To Marked As completed");
+        if (response.status === 400) {
+          router.push("/login");
+        }
       }
     } catch {
       toast.error("error updating todo");

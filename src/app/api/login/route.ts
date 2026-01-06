@@ -2,6 +2,7 @@ import { db } from "@/db"
 import { users } from "@/db/schema"
 import { and, eq } from "drizzle-orm"
 import z from "zod"
+import jwt from 'jsonwebtoken'
 
 const loginSchema = z.object({
     email:z.email(),
@@ -42,4 +43,23 @@ const data = validation.data
     )
     }
     // generate JWT and send to users.
+    const user = result[0]
+const token = jwt.sign({
+    
+    email:user.email,
+    id:user.id
+},"SecretKey",{
+    expiresIn:"1 min"
+})
+
+return new Response(
+    JSON.stringify({
+    token:token
+    }),
+    {
+        status:200,
+        headers:{"content-type":"application/json"}
+    }
+)
+
  }

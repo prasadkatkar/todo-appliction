@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,8 +15,48 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { setCookie } from "cookies-next";
 
-export function LoginForm({}: React.ComponentProps<"div">) {
+export function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function handleSubmit() {
+    //step:1 check email & password field ,if empty
+    //step:2 call api /api/login with body (email,password)
+    //seep:3 get api response, check token
+    //step:4 store that token in local storage
+
+    if (!email) {
+      setMessage("email is invalid");
+      return;
+    }
+
+    if (!password) {
+      setMessage("password is invalid");
+      return;
+    }
+    const response = await fetch("/api/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    if (!response.ok) {
+      setMessage("Failed To login");
+      return;
+    }
+    setIsLoading(true);
+    const result = await response.json();
+    const token = result.token;
+
+    localStorage.setItem("jwt", token);
+    // Store the JWT in a cookie for server side validation
+    setCookie("jwt", token);
+    setIsLoading(false);
+  }
+
   return (
     <div className={cn("flex flex-col gap-6")}>
       <Card>
@@ -29,7 +70,15 @@ export function LoginForm({}: React.ComponentProps<"div">) {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input placeholder="m@example.com" />
+              <Input
+                id="email"
+                placeholder="m@example.com"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={isLoading}
+              />
             </Field>
             <Field>
               <div className="flex items-center">
@@ -41,15 +90,38 @@ export function LoginForm({}: React.ComponentProps<"div">) {
                   Forgot your password?
                 </a>
               </div>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
+              />
             </Field>
+            {message && (
+              <div
+                className={`text-sm ${
+                  message.includes("successful")
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
+                {message}
+              </div>
+            )}
             <Field>
-              <Button type="submit">Login</Button>
-              <Button variant="outline" type="button">
-                Login with Google
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full"
+                onClick={handleSubmit}
+              >
+                {isLoading ? "Logging in..." : "Login"}
               </Button>
+
               <FieldDescription className="text-center">
-                Don&apos;t have an account? <a href="#">Sign up</a>
+                Don&apos;t have an account? <a href="/signup">Sign up</a>
               </FieldDescription>
             </Field>
           </FieldGroup>
