@@ -23,7 +23,7 @@ export function TodoAction({ id, completed }: TodoActionsProps) {
     try {
       const response = await fetch(`/api/todos/${id}`, {
         method: "DELETE",
-        headers: { authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (response.ok) {
         toast.success("Todo Deleted Successfully");
@@ -51,7 +51,7 @@ export function TodoAction({ id, completed }: TodoActionsProps) {
         method: "PUT",
         headers: {
           "content-type": "applcation/json",
-          authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ completed: true }),
       });

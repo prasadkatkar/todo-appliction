@@ -29,7 +29,7 @@ export function UserProfile() {
       method: "PUT",
       headers: {
         "content-type": "application/json",
-        authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ name }),
     });
@@ -51,7 +51,7 @@ export function UserProfile() {
     }
     const response = await fetch("/api/users", {
       method: "GET",
-      headers: { authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     if (!response.ok) {
       alert("Failed to fetch user profile");

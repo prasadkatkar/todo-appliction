@@ -17,7 +17,7 @@ export async function PUT(req:Request){
     //step 3 : get user id from decoded token
     
     const headerList = await headers()
-    const token = headerList.get("authorization")?.replace("Bearer ","")
+    const token = headerList.get("Authorization")?.replace("Bearer ","")
     if(!token){
         return new Response(
             JSON.stringify({
@@ -76,7 +76,7 @@ export async function PUT(req:Request){
 
 export async function GET(){
 const headerList = await headers()
-const token = headerList.get("authorization")?.replace("Bearer ","")
+const token = headerList.get("Authorization")?.replace("Bearer ","")
 if(!token){
     return new Response(
         JSON.stringify({

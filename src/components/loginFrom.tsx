@@ -17,13 +17,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const router = useRouter();
   async function handleSubmit() {
     //step:1 check email & password field ,if empty
     //step:2 call api /api/login with body (email,password)
@@ -39,15 +40,18 @@ export function LoginForm() {
       setMessage("password is invalid");
       return;
     }
+    setIsLoading(true);
+
     const response = await fetch("/api/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
     if (!response.ok) {
       setMessage("Failed To login");
+      setIsLoading(false);
+
       return;
     }
-    setIsLoading(true);
     const result = await response.json();
     const token = result.token;
 
@@ -55,6 +59,7 @@ export function LoginForm() {
     // Store the JWT in a cookie for server side validation
     setCookie("jwt", token);
     setIsLoading(false);
+    router.push("/");
   }
 
   return (

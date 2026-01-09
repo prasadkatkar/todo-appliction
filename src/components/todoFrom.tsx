@@ -51,7 +51,7 @@ export function TodoFrom() {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ title, description }),
     });
@@ -74,6 +74,7 @@ export function TodoFrom() {
     setTitle("");
     setDescription("");
   }
+
   function handleReset() {
     setFormData(initialFormState);
   }

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
 export function validateJwt(token: string) {
   try {
@@ -10,4 +11,21 @@ export function validateJwt(token: string) {
   } catch {
     return null;
   }
+}
+
+
+/**
+ * Get user session from cookies (authenticated)
+ * 
+ */
+export async function getSession() {
+  const cookiesData = await cookies()
+  const jwt = cookiesData.get("jwt")?.value;
+  // if(!jwt){
+  //   return null;
+  // }
+
+  // return validateJwt(jwt);
+
+  return jwt ? validateJwt(jwt) : null;
 }

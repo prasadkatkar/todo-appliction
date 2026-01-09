@@ -17,7 +17,7 @@ export function Profile() {
     }
     const response = await fetch("/api/users", {
       method: "GET",
-      headers: { authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     if (!response.ok) {
       alert("Failed to fetch User Profile");

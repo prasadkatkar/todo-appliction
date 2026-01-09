@@ -49,7 +49,7 @@ const token = jwt.sign({
     email:user.email,
     id:user.id
 },"SecretKey",{
-    expiresIn:"1 min"
+    expiresIn:"30 min"
 })
 
 return new Response(

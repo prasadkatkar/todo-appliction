@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import { cookies } from "next/headers";
+import { getSession, validateJwt } from "@/lib/server-utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { validateJwt } from "@/lib/server-utils";
 //...existing code...
 
 export const metadata: Metadata = {
@@ -18,6 +17,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+
   return (
     <html>
       <body>
@@ -29,9 +30,11 @@ export default async function RootLayout({
         >
           {children}
         </ThemeProvider>
-        <Link href={"/create"} className="fixed bottom-20 right-20">
-          <Button className="text-3xl p-2 text-center">+</Button>
-        </Link>
+        {session?.id && (
+          <Link href={"/create"} className="fixed bottom-20 right-20">
+            <Button className="text-3xl p-2 text-center">+</Button>
+          </Link>
+        )}
       </body>
     </html>
   );

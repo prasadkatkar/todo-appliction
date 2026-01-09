@@ -1,27 +1,28 @@
 import { Profile } from "@/components/profile";
 import { Card } from "@/components/ui/card";
-import { getTodos } from "@/lib/clients/api";
-import { validateJwt } from "@/lib/server-utils";
+import { getSession } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import Link from "next/link";
+import { db } from "@/db";
+import { eq } from "drizzle-orm";
+import { todosTable } from "@/db/schema";
+
+async function getTodosByUserId(userId: number) {
+  return await db
+    .select()
+    .from(todosTable)
+    .where(eq(todosTable.userId, userId));
+}
 
 export default async function Home() {
-  const appCookies = await cookies();
-  const token = appCookies.get("jwt");
-  // console.log(token);
-
-  if (!token?.value) {
-    redirect("./login");
+  const session = await getSession();
+  if (!session) {
+    redirect("/login");
   }
 
-  const decodedValue = validateJwt(token.value);
+  // get todos for current user
+  const todos = await getTodosByUserId(session.id);
 
-  if (!decodedValue) {
-    redirect("./login");
-  }
-
-  const todos = await getTodos();
   return (
     <div className="p-12">
       <Profile />

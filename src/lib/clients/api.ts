@@ -3,7 +3,8 @@ import { Todo } from "../constants"
 const baseURL = "http://localhost:3000/api"
 
 // Get auth token from localStorage
-function getAuthToken(): string | null {
+ function getAuthToken(): string | null {
+    
     if (typeof window !== 'undefined') {
         return localStorage.getItem("authToken");
     }
@@ -29,7 +30,10 @@ async function handleApiResponse(response: Response) {
 }
 
 async function fetch_main(path: string, options: RequestInit = {}) {
-    const token = getAuthToken();
+    const token = getAuthToken()
+
+    
+
 
     const headers: HeadersInit = {
         "Content-Type": "application/json",
