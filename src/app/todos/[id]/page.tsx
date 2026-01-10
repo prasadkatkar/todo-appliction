@@ -7,29 +7,41 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getTodoById } from "@/lib/clients/api";
-import { validateJwt } from "@/lib/server-utils";
+import { db } from "@/db";
+import { todosTable } from "@/db/schema";
+import { getSession } from "@/lib/server-utils";
+import { and, eq } from "drizzle-orm";
 import { ArrowLeft } from "lucide-react";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+async function getTodosByUserId(userId: number, id: number) {
+  const result = await db
+    .select()
+    .from(todosTable)
+    .where(and(eq(todosTable.id, id), eq(todosTable.userId, userId)));
+  return result;
+}
 
 export default async function SingleTodoPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const appCookies = await cookies();
-  const token = appCookies.get("jwt");
-  if (!token?.value) {
+  const session = await getSession();
+  if (!session) {
     redirect("./login");
   }
-  const decodedValue = validateJwt(token.value);
-  if (!decodedValue) {
-    redirect("./login");
-  }
+
   const { id } = await params;
-  const todo = await getTodoById(id);
+  const todoId = parseInt(id);
+  const todos = await getTodosByUserId(session.id, todoId);
+
+  const todo = todos[0];
+
+  if (!todo) {
+    return <p>todo not found</p>;
+  }
 
   return (
     <div className="p-12">
@@ -40,18 +52,18 @@ export default async function SingleTodoPage({
               <Link href={"/"}>
                 <ArrowLeft className="w-5 h-5" />
               </Link>
-              <CardTitle>{todo?.title}</CardTitle>
+              <CardTitle>{todo.title}</CardTitle>
             </div>
-            <Badge>{todo?.completed ? "Completed" : "Pending"}</Badge>
+            <Badge>{todo.completed ? "Completed" : "Pending"}</Badge>
           </div>
         </CardHeader>
         <hr />
         <CardContent>
-          <p>{todo?.description}</p>
+          <p>{todo.description}</p>
         </CardContent>
         <hr />
         <CardFooter>
-          <TodoAction id={id} completed={todo?.completed || false} />
+          <TodoAction id={id} completed={todo.completed || false} />
         </CardFooter>
       </Card>
     </div>

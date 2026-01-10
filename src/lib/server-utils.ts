@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 export function validateJwt(token: string) {
   try {
@@ -28,4 +28,15 @@ export async function getSession() {
   // return validateJwt(jwt);
 
   return jwt ? validateJwt(jwt) : null;
+}
+
+// only for API routes
+export async function getApiSession(){
+  const headerList = await headers()
+  const token = headerList.get("Authorization")?.replace("Bearer ","")
+  if(!token){
+    return null
+  }
+  return validateJwt(token)
+
 }

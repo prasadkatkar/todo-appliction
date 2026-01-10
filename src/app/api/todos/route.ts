@@ -1,15 +1,13 @@
 import { db } from "@/db/index";
 import { todosTable } from "@/db/schema";
-import { validateJwt } from "@/lib/server-utils";
+import { getApiSession } from "@/lib/server-utils";
 import { desc, eq } from "drizzle-orm";
-import { headers } from "next/headers";
 import z from "zod";
 
 export async function GET() {
   //get todos from database
-  const headerList = await headers()
-  const token = headerList.get("Authorization")?.replace("Bearer ","")
-  if(!token){
+const session = await getApiSession()
+  if(!session){
     return new Response(
       JSON.stringify({
         error:"unauthorized"
@@ -18,22 +16,13 @@ export async function GET() {
       }
     )
   }
-  const decoded = validateJwt(token)
-  if(!decoded){
-    return new Response(
-      JSON.stringify({
-        error:"unauthorized"
-      }),{
-        status:400
-      }
-    )
-  }
+ 
 
 
   const todos = await db
     .select()
     .from(todosTable)
-    .where(eq(todosTable.userId,decoded.id))
+    .where(eq(todosTable.userId,session.id))
     .orderBy(desc(todosTable.created_at))
     .limit(50);
 
@@ -55,9 +44,8 @@ export async function POST(req: Request) {
   // step 1 : get token from bearer headers
   //step 2 :
 
-  const headerList = await headers();
-  const token = headerList.get("Authorization")?.replace("Bearer ", "");
-  if (!token) {
+ const session = await getApiSession()
+  if (!session) {
     return new Response(
       JSON.stringify({
         error: "unauthorized",
@@ -68,18 +56,8 @@ export async function POST(req: Request) {
     );
   }
 
-  const decoded = validateJwt(token);
 
-  if (!decoded) {
-    return new Response(
-      JSON.stringify({
-        error: "unauthorized",
-      }),
-      {
-        status: 400,
-      }
-    );
-  }
+ 
 
   const body = await req.json();
 
@@ -107,7 +85,7 @@ export async function POST(req: Request) {
       created_at: new Date(),
       updated_at: new Date(),
       completed: false,
-      userId: decoded.id,
+      userId: session.id,
     })
     .returning();
 
