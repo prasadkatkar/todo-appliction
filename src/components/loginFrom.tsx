@@ -60,6 +60,7 @@ export function LoginForm() {
     setCookie("jwt", token);
     setIsLoading(false);
     router.push("/");
+    router.refresh();
   }
 
   return (
