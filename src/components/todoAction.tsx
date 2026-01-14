@@ -69,12 +69,16 @@ export function TodoAction({ id, completed }: TodoActionsProps) {
     }
   }
   return (
-    <div className="w-full flex items-center justify-end gap-4">
-      <Button variant={"destructive"} onClick={handleDelete}>
+    <div className="w-full flex items-center justify-end gap-4 shrink-0">
+      <Button variant={"destructive"} onClick={handleDelete} className="grow-0">
         Delete
       </Button>
       {!completed && (
-        <Button variant={"default"} onClick={handleMarkComplete}>
+        <Button
+          variant={"default"}
+          onClick={handleMarkComplete}
+          className="grow-0"
+        >
           <CheckIcon />
           Mark Completed
         </Button>

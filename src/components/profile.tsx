@@ -1,12 +1,22 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import { deleteCookie } from "cookies-next";
 
 export function Profile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const router = useRouter();
+
+  async function handleLogout() {
+    localStorage.removeItem("jwt");
+    deleteCookie("jwt");
+    router.push("/login");
+    router.refresh();
+  }
 
   async function fetchUser() {
     const token = localStorage.getItem("jwt");
@@ -33,9 +43,21 @@ export function Profile() {
   }, []);
 
   return (
-    <div className="flex gap-5 justify-end">
-      <h1>User Name : {name}</h1>
-      <p>Email : {email}</p>
+    <div className="bg-gray-800 p-3 flex justify-between items-center">
+      <div className="flex gap-10">
+        <Link href={"/"}>Home</Link>
+        <Link href={"/profile"}>Profile</Link>
+        <Link href={"/create"}>Create Todo</Link>
+      </div>
+      <div className="flex gap-5 items-center">
+        <h1>User Name : {name}</h1>
+        <p>Email : {email}</p>
+        <div>
+          <Button variant="ghost" onClick={handleLogout}>
+            Logout
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,3 @@
-import { Profile } from "@/components/profile";
 import { Card } from "@/components/ui/card";
 import { getSession } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
@@ -25,7 +24,6 @@ export default async function Home() {
 
   return (
     <div className="p-12">
-      <Profile />
       {todos.length === 0 ? (
         <p className="text-center text-4xl text-gray-200">
           Todos Not Found.....!

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
-import { cookies } from "next/headers";
-import { getSession, validateJwt } from "@/lib/server-utils";
+import { getSession } from "@/lib/server-utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Profile } from "@/components/profile";
 //...existing code...
 
 export const metadata: Metadata = {
@@ -28,6 +28,8 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          {session?.id && <Profile />}
+
           {children}
         </ThemeProvider>
         {session?.id && (
