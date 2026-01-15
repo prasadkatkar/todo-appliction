@@ -58,16 +58,28 @@ export function Profile() {
       </div>
       {open && (
         <div className="absolute top-16 left-0 bg-gray-800 w-full md:hidden flex flex-col gap-4 p-4">
-          <h1>Name : {name}</h1>
-          <p>Email : {email}</p>
+          <h1 className="text-white">Name : {name}</h1>
+          <p className="text-white">Email : {email}</p>
 
-          <Link href={"/"} onClick={() => setOpen(false)}>
+          <Link
+            href={"/"}
+            className="text-white"
+            onClick={() => setOpen(false)}
+          >
             Home
           </Link>
-          <Link href={"/profile"} onClick={() => setOpen(false)}>
+          <Link
+            href={"/profile"}
+            className="text-white"
+            onClick={() => setOpen(false)}
+          >
             Profile
           </Link>
-          <Link href={"/create"} onClick={() => setOpen(false)}>
+          <Link
+            href={"/create"}
+            className="text-white"
+            onClick={() => setOpen(false)}
+          >
             Create Todo
           </Link>
         </div>
