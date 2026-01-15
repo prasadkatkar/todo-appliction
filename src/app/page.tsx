@@ -29,7 +29,7 @@ export default async function Home() {
           Todos Not Found.....!
         </p>
       ) : (
-        <div className="p-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 w-full">
           {todos.map((todo) => (
             <Link key={todo.id} href={`/todos/${todo.id}`}>
               <Card className="p-4 w-full flex flex-wrap">
