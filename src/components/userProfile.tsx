@@ -39,6 +39,8 @@ export function UserProfile() {
     }
     if ((await response).ok) {
       toast.success("Name Updated Successfully.");
+      router.push("/");
+      router.refresh();
     }
   }
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
