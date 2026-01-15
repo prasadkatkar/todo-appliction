@@ -44,7 +44,7 @@ export default async function SingleTodoPage({
   }
 
   return (
-    <div className="p-12 shrink-0">
+    <div className="p-12 shrink-0 w-full">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -62,7 +62,7 @@ export default async function SingleTodoPage({
           <p>{todo.description}</p>
         </CardContent>
         <hr />
-        <CardFooter className="grow-0">
+        <CardFooter className="">
           <TodoAction id={id} completed={todo.completed || false} />
         </CardFooter>
       </Card>

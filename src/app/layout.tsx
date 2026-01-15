@@ -5,6 +5,7 @@ import { getSession } from "@/lib/server-utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Profile } from "@/components/profile";
+import { MdCreate } from "react-icons/md";
 //...existing code...
 
 export const metadata: Metadata = {
@@ -33,8 +34,13 @@ export default async function RootLayout({
           {children}
         </ThemeProvider>
         {session?.id && (
-          <Link href={"/create"} className="fixed bottom-20 right-20">
-            <Button className="text-3xl p-2 text-center">+</Button>
+          <Link
+            href={"/create"}
+            className="fixed sm:bottom-20 sm:right-20 transition-transform duration-300 bottom-5 right-5 ease-in-out hover:scale-130"
+          >
+            <Button className="text-3xl p-2 text-center">
+              <MdCreate />
+            </Button>
           </Link>
         )}
       </body>
